@@ -1,6 +1,8 @@
 from pathlib import Path
 import os
-from environ import Env
+import environ
+import os
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -177,3 +179,23 @@ CELERY_TIMEZONE = TIME_ZONE
 
 # Celery Beat Settings
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+
+
+# Initialize environment variables
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+
+# Read from the .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+# Now use the values like this:
+DEBUG = env('DEBUG')
+SECRET_KEY = env('SECRET_KEY')
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+
+# Database
+DATABASES = {
+    'default': env.db()
+}
